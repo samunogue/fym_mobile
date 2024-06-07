@@ -14,6 +14,10 @@ export const DetalhesContrato = ({navigation, route, atualizarContratos}) =>{
     const [contrato, setContrato] = useState(null)
     const [user, setUser] = useState(null)
     const [modalContrato, setModalContrato] = useState(false) 
+    const [modalAvaliacao, setModalAvaliacao] = useState(false)
+    const [avaliacao, setAvaliacao] = useState('')
+    const [alerta, setAlerta] = useState(null)
+    const [load, setLoad] = useState(false)
 
     useEffect(() =>{
         navigation.getParent().setOptions({ tabBarStyle:{display:"none"}})
@@ -47,6 +51,36 @@ export const DetalhesContrato = ({navigation, route, atualizarContratos}) =>{
         }
         var contratoFIltrado = responder.user.contratos.filter((item) => item.codigo == contrato.codigo)
         setContrato(contratoFIltrado[0])
+        
+    }   
+
+    const avaliarContrato = async (resposta) =>{
+        setLoad(true)
+        const url = endpoints.avaliarMusico
+        const body = {
+            "avaliacao":{
+                "nome": user.nomeCompleto,
+                "mensagem":avaliacao.mensagem,
+                "nota": avaliacao.nota
+            },
+            "idMusico": contrato.musico.id
+        }
+        const responder = await Post(url, body)
+        if(responder.error == false){
+            setLoad(false)
+            setModalAvaliacao(false)
+            setAlerta("Avaliação realizada")
+            setTimeout(()=>{
+                
+                setAlerta(null)
+            },2000)
+            return
+        }
+        setAlerta("Não foi possível realizar a avaliação")
+        setLoad(false)
+        setTimeout(()=>{
+            setAlerta(null)
+        },2000)
         
     }
 
@@ -89,6 +123,36 @@ export const DetalhesContrato = ({navigation, route, atualizarContratos}) =>{
                     </TouchableOpacity>
                 )}
                     </>
+                )}
+                {tipo == 'contratante' && contrato != null &&contrato.status == "ACEITO" &&(
+                    <TouchableOpacity onPress={() => setModalAvaliacao(true)} style={{width:"100%", flexDirection:"row", alignItems:"center", justifyContent:"center", gap:10, paddingVertical:15, borderRadius:10, backgroundColor:"#804DEC", marginTop:20}}>
+                        <Text style={{color:"white", fontWeight:"bold", fontSize:18}}>Avaliar Músico</Text>
+                        <FontAwesomeIcon icon={faFilePen} size={22} color="white" />
+                    </TouchableOpacity>
+                )}
+                {modalAvaliacao == true &&(
+                    <Modal
+                    animationType="fade"
+                    transparent={true}
+                    >
+                        <View style={style.modalBackground}>
+                            <View style={style.modalContent}>
+                                <Input theme={"black"} tamanho={"full"} titulo={"Comentário"} funcao={(text) => setAvaliacao({...avaliacao,mensagem:text})} />
+                                <Input theme={"black"} tamanho={"full"} titulo={"Nota"} funcao={(text) => setAvaliacao({...avaliacao,nota:text})}  />
+                                <TouchableOpacity onPress={avaliarContrato} style={{width:"100%", flexDirection:"row", alignItems:"center", justifyContent:"center", gap:10, paddingVertical:15, borderRadius:10, backgroundColor:"#804DEC", marginTop:20}}>
+                                    {load == true 
+                                    ?
+                                        <ActivityIndicator color={"white"} size={"small"} />
+                                    :
+                                    <>
+                                        <Text style={{color:"white", fontWeight:"bold", fontSize:18}}>Avaliar</Text>
+                                        <FontAwesomeIcon icon={faFilePen} size={22} color="white" />
+                                    </>
+                                    }
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </Modal>
                 )}
         </View>
     )

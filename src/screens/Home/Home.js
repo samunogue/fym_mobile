@@ -26,7 +26,7 @@ export const HomePage = ({navigation}) =>{
     return(
     <View style={style.page}>
         {modalMusico != null &&(
-            <ModalMusico musico={modalMusico} fecharModal={() => setModalMusico(null)} funcaoChat={() =>{setModalMusico(null); navigation.navigate('ChatMain',{ iniciarConversa: modalMusico})}} />
+            <ModalMusico musicoJson={modalMusico} setMusicos={setMusicos} fecharModal={() => setModalMusico(null)} funcaoChat={() =>{setModalMusico(null); navigation.navigate('ChatMain',{ iniciarConversa: modalMusico})}} />
         )}
         <View style={style.box_input} >
                 <TextInput value={valorPesquisa} onChangeText={(text) => setPesquisa(text)} style={style.input} placeholder="Digite o nome do músico"></TextInput>

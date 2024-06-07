@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome"
 import { faRightToBracket } from "@fortawesome/free-solid-svg-icons"
 import { endpoints } from "../services/endpoints"
 import { Post } from "../services"
+import { DADOS_STORAGE, setAsyncStorage } from "../services/AsyncStorage"
 
 export const CadastroPage = ({navigation}) =>{
     const [load, setLoad] = useState(false)
@@ -36,7 +37,6 @@ export const CadastroPage = ({navigation}) =>{
             var url = tipo == true ? endpoints.cadastrarMusico : endpoints.cadastrarContratante
             if(tipo == 'musico') forms.descricao = descricao
             const cadastrar = await Post(url , forms)
-            console.log(cadastrar)
             if(cadastrar.error == false){
                 const salvarTipo = await setAsyncStorage(DADOS_STORAGE.TIPO_USER, tipo == true ? 'musico' : 'contratante')
                 const salvarUser = await setAsyncStorage(DADOS_STORAGE.USER, JSON.stringify(cadastrar.user))

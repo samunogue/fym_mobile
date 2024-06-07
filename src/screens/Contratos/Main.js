@@ -11,7 +11,7 @@ import { endpoints } from "../../services/endpoints"
 export const MainContratosPage = ({navigation}) =>{
     const [user, setUser] = useState(null)
     const [tipo, setTipo] = useState(null)
-    const [contratos,setContratos] = useState(null)
+    const [contratos,setContratos] = useState([])
     const [modalContrato, setModalContrato] = useState(null)
     
     useEffect(() =>{
@@ -21,7 +21,7 @@ export const MainContratosPage = ({navigation}) =>{
             var tipo = await getAsyncStorage(DADOS_STORAGE.TIPO_USER)
             if(userJson.contratos.length == 0){
                 setTipo(tipo)
-                setContratos(null)
+                setContratos([])
                 setUser(userJson)
                 return
             }
@@ -38,7 +38,7 @@ export const MainContratosPage = ({navigation}) =>{
         <ScrollView style={{height:"50%", width:"100%"}}>
             <Text style={{fontWeight:"bold", color:"white", fontSize:26, marginRight:"auto", marginLeft:20}}>Contratos</Text>
             {modalContrato != null && user != null &&(
-                <ModalContrato user={user} fecharModal={() => setModalContrato(null)} />
+                <ModalContrato user={user} fecharModal={() => setModalContrato(null)} contratos={contratos} setContratos={setContratos}/>
             )}
             {tipo == 'contratante' &&(
                 <TouchableOpacity onPress={() => setModalContrato(true)} style={{width:"100%", flexDirection:"row", alignItems:"center", justifyContent:"center", gap:10, paddingVertical:15, borderRadius:10, backgroundColor:"#804DEC"}}>
@@ -46,9 +46,9 @@ export const MainContratosPage = ({navigation}) =>{
                     <FontAwesomeIcon icon={faFileInvoice} size={22} color="white" />
                 </TouchableOpacity>
             )}
-            {contratos == null
+            {contratos.length == 0
             ?
-            <Text>Sem contratos</Text>
+            null
             :
             contratos.map(item =>
                 <TouchableOpacity style={style.box} key={item.codigo} onPress={() => navigation.navigate('DetalhesContrato',{ contratoJson: item, tipo: tipo})}>

@@ -41,10 +41,9 @@ export const ListaMusicosPage = ({navigation, route}) =>{
         <View  style={style.page}>
             {musicos != null ?
                 <FlatList
-                style={{paddingHorizontal:10}}
+                style={{paddingHorizontal:10, width:"100%"}}
                 data={musicos}
                 renderItem={({item}) =>
-                    <TouchableOpacity key={item.id} >
                         <View style={style.boxFuncao}>
                             <Text style={{width:"100%", color:"black", fontWeight:"bold", fontSize:18}}>{item.nomeCompleto}</Text>
                             <View style={{flexDirection:"row", flexWrap:"wrap", gap:5, justifyContent:"flex-start", width:"100%"}}>
@@ -52,18 +51,8 @@ export const ListaMusicosPage = ({navigation, route}) =>{
                                     <Text key={index} style={{backgroundColor:"#B5B0EC", padding:5, borderRadius:5, fontWeight:"bold", fontSize:15}}>{itemGenero}</Text>  
                                 )}
                             </View>
-                            <View style={{flexDirection:"row", justifyContent:"space-around", width:"100%", marginTop:"auto"}}>
-                                <TouchableOpacity style={{width:"47%", backgroundColor:"#5FBDFF", borderRadius:5, flexDirection:"row",alignItems:"center",justifyContent:"center", padding:5, gap:7}}>
-                                    <Text style={{fontWeight:"bold", color:"white", fontSize:16,}}>Chat</Text>
-                                    <FontAwesomeIcon icon={faMessage} color="white" />
-                                </TouchableOpacity>
-                                <TouchableOpacity style={{width:"47%", backgroundColor:"#5FBDFF", borderRadius:5, flexDirection:"row",alignItems:"center",justifyContent:"center", padding:5, gap:7}}>
-                                    <Text style={{fontWeight:"bold", color:"white", fontSize:16}}>Contratar</Text>
-                                    <FontAwesomeIcon icon={faFile} color="white" />
-                                </TouchableOpacity>
-                            </View>
+
                         </View>
-                    </TouchableOpacity>
                     }
                 />
                 :

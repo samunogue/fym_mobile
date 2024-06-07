@@ -9,7 +9,7 @@ import { endpoints } from '../services/endpoints';
 
 const { width } = Dimensions.get("window");
 
-export const ModalChat = ({user, fecharModal, buscarDados, setConversas}) =>{
+export const ModalChat = ({user, fecharModal, buscarDados, setConversas, conversas}) =>{
     const [pesquisa, setPesquisa] = useState('')
     const [musicos, setMusicos] = useState(null)
     const [load, setLoad] = useState(false)
@@ -28,7 +28,6 @@ export const ModalChat = ({user, fecharModal, buscarDados, setConversas}) =>{
 
     const cadastrarContrato = async () =>{
         setLoadCadastro(true)
-        console.log(contrato)
         const contratoJson = {
             idUserDestinatario: contrato.cpfMusico._id,
             idUserRemetente: user._id,
@@ -36,8 +35,8 @@ export const ModalChat = ({user, fecharModal, buscarDados, setConversas}) =>{
             tipoDestinatario: contrato.cpfMusico.hasOwnProperty('descricao') == true ? 'musico' : 'contratante'
         }
         const cadastrar = await Post(endpoints.criarConversa, contratoJson)
-        const dados = await buscarDados()
-        setConversas(dados)
+        console.log(cadastrar)
+        setConversas([...conversas, cadastrar.conversa])
         setLoadCadastro(false)
         fecharModal()
     }

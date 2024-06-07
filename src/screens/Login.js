@@ -8,8 +8,8 @@ import { DADOS_STORAGE, getAsyncStorage, setAsyncStorage } from "../services/Asy
 
 
 export const LoginPage = ({navigation}) =>{
-    const [email, setEmail] = useState('samuel@gmail.com')
-    const [senha, setSenha] = useState('1234')
+    const [email, setEmail] = useState('testecontratante@gmail.com')
+    const [senha, setSenha] = useState('root')
     const [erro,setErro] = useState('')
     const [load,setLoad] = useState(false)
     const [tipo, setTipo] = useState(false)
@@ -35,14 +35,14 @@ export const LoginPage = ({navigation}) =>{
     },[])
 
     const logar = async () =>{
-        setLoad(false)
+        setLoad(true)
         var params = {
             "login": email,
             "senha": senha
         }
         if(tipo == true){
-            params.login = "maria@example.com",
-            params.senha = "senha123"
+            params.login = "testemusico@gmail.com",
+            params.senha = "root"
         }
         var url = tipo == true ? endpoints.loginMusico : endpoints.loginContratante
         const user = await Post(url ,params)
@@ -77,7 +77,7 @@ export const LoginPage = ({navigation}) =>{
                 onChangeText={setEmail}
                 placeholder="Email"
                 placeholderTextColor={"white"}
-                editable={false}
+                editable={true}
                 />
                 <TextInput
                 placeholderTextColor={"white"}
@@ -85,7 +85,7 @@ export const LoginPage = ({navigation}) =>{
                 secureTextEntry={true}
                 onChangeText={setSenha}
                 placeholder="Senha"
-                editable={false}
+                editable={true}
                 />
                 {load == true ?
                     <TouchableOpacity disabled style={style.botaoLogin}>

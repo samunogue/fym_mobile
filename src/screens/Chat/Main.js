@@ -11,7 +11,7 @@ export const MainChatPage = ({navigation,route}) =>{
     const params = route.params
     const [modalChat, setModalChat] = useState(null)
     const [user, setUser] = useState({})
-    const [conversas, setConversas] = useState(null)
+    const [conversas, setConversas] = useState([])
 
     useEffect(() =>{
         const buscar = async () =>{
@@ -25,9 +25,8 @@ export const MainChatPage = ({navigation,route}) =>{
             var userJson = JSON.parse(user)
             setUser(userJson)
             var conversasJson = await Get(endpoints.buscarConversas, {id: userJson._id})
-            console.log(conversasJson)
             if(conversasJson == undefined || conversasJson == false || conversasJson.error == true){
-                setConversas(null)
+                setConversas([])
                 return
             }
             setConversas(conversasJson)
@@ -37,10 +36,10 @@ export const MainChatPage = ({navigation,route}) =>{
         <View style={style.page}>
             <ScrollView style={{height:"80%", width:"100%",}}>
             {modalChat != null &&(
-                <ModalChat user={user} buscarDados={buscarDados} setConversas={setConversas} fecharModal={() => setModalChat(null)} />
+                <ModalChat conversas={conversas} user={user} buscarDados={buscarDados} setConversas={setConversas} fecharModal={() => setModalChat(null)} />
             )}
             <Text style={{fontWeight:"bold", color:"white", fontSize:26, marginRight:"auto", marginLeft:20}}>Conversas</Text>
-            {conversas != null && (
+            {conversas.length > 0 && (
             conversas.map((item, index) =>
             <TouchableOpacity onPress={() => navigation.navigate('Chat',{ conversa:item})} key={index} style={{backgroundColor:"white", borderRadius:5, padding:15,width:"95%", margin:10}}>
                 <Text>{user.nomeCompleto == item.nomesUsuario[0] ? item.nomesUsuario[1] : item.nomesUsuario[0]}</Text>

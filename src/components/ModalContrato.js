@@ -9,10 +9,11 @@ import { endpoints } from '../services/endpoints';
 
 const { width } = Dimensions.get("window");
 
-export const ModalContrato = ({user, fecharModal}) =>{
+export const ModalContrato = ({user, fecharModal, contratos, setContratos}) =>{
     const [pesquisa, setPesquisa] = useState('')
     const [musicos, setMusicos] = useState(null)
     const [load, setLoad] = useState(false)
+    const [alerta, setAlerta] = useState(null)
     const [contrato, setContrato] = useState({
         cpfMusico: '',
         cpfContratante: user.CPF,
@@ -35,8 +36,17 @@ export const ModalContrato = ({user, fecharModal}) =>{
             cpfMusico: contrato.cpfMusico.CPF,
         }
         const cadastrar = await Post(endpoints.cadastrarContrato, contratoJson)
-        fecharModal()
+        if(cadastrar.hasOwnProperty('contrato') == true){
+            setContratos([...contratos, cadastrar.contrato])
+            fecharModal()
+            setLoad(false)
+        }
         setLoad(false)
+        setAlerta("Não foi possível cadastrar o contrato")
+        setLoad(false)
+        setTimeout(()=>{
+            setAlerta(null)
+        },2000)
     }
 
     return (
@@ -82,6 +92,9 @@ export const ModalContrato = ({user, fecharModal}) =>{
                         <Input theme={"black"} titulo={"Termos Contratuais"} tamanho={"full"} multiline={true} funcao={(text) => setContrato({...contrato, termo: text })}/>
                     </View>}
                     </ScrollView>
+                    {alerta != null &&(
+                        <Text style={{color:"red", marginBottom:20, fontSize:18, fontWeight:"bold"}}>{alerta}</Text>
+                    )}
                     <View style={{flexDirection:"row", width:"100%",gap:10, alignItems:"center", justifyContent:"center", marginTop:"auto",paddingBottom:20}}>
                         <TouchableOpacity onPress={fecharModal} style={{width:"35%",padding:10, backgroundColor:"red", borderRadius:10, justifyContent:"center", alignItems:"center", height:50}}>
                             <FontAwesomeIcon icon={faX} color='white' size={18}/>

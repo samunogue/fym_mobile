@@ -1,12 +1,25 @@
 import { faArrowLeft, faArrowRight, faFilePen, faMessage, faX } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Image, Text, StyleSheet, Modal, ActivityIndicator, TouchableOpacity, Dimensions } from 'react-native';
 import Carousel, {Pagination} from 'react-native-snap-carousel'
+import { Get } from '../services';
+import { endpoints } from '../services/endpoints';
 
 const { width } = Dimensions.get("window");
 
-export const ModalMusico = ({musico, fecharModal, funcaoChat}) =>{
+export const ModalMusico = ({musicoJson, fecharModal, funcaoChat, setMusicos}) =>{
+    const [musico, setMusico] = useState(musicoJson)
+    useEffect(() =>{
+        const buscar = async () =>{
+            const musicos = await Get(endpoints.listarMusicos, null)
+            const musicoFiltrado = musicos.filter((item) => item.CPF == musicoJson.CPF)
+            const musicosFiltradoSemMusico = musicos.filter((item) => item.CPF != musicoJson.CPF)
+            setMusicos([...musicoFiltrado, ...musicosFiltradoSemMusico])
+            setMusico(musicoFiltrado[0])
+        }
+        buscar()
+    },[])
     return (
         <Modal
             animationType="fade"
